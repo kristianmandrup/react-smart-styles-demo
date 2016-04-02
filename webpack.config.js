@@ -66,9 +66,15 @@ module.exports = {
   module: {
     loaders: [
       {
-        test: /\.jsx?$/,
-        loaders: ['babel'],
-        include: path.join(__dirname, 'scripts')
+        test: /\.(js|jsx|es6)$/,
+        exclude: /node_modules/,
+        include: path.join(__dirname, 'scripts'),
+        loader: 'babel',
+        query: {
+          cacheDirectory: true,
+          presets: ['es2015', 'stage-1', 'react'],
+          plugins: 'babel-plugin-transform-decorators-legacy'
+        }
       }
     ]
   }
