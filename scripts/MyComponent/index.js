@@ -1,18 +1,11 @@
 import Styler from './Styler.js'
-import { statefulStyling, updateStyles } from '../decorators.js'
+import { statefulStyling, updateStyles } from 'style-builder';
 import { injectProps } from 'relpers'
 
 import React, {
   Component
 } from 'react'
 
-// props are global (or higher level state)
-// state is local state (ie. local styling)
-// to calculate local style state, use global and local state
-// to compute new style object (one level deep only!)
-
-// See ES7 Decorators + React
-// https://medium.com/@goncalvesjoao/react-es7-decorators-how-to-inject-props-to-your-render-method-27a0a7973106#.d9dir76zc
 @statefulStyling('browser', Styler)
 export default class MyComponent extends Component {
 

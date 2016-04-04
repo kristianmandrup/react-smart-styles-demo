@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import MyComponent from './MyComponent';
 import shortid from 'shortid';
-import { statefulStyling, updateStyles } from './decorators.js'
+import { statefulStyling, updateStyles } from 'style-builder'
 import { injectProps } from 'relpers'
 
 import Styler from './AppStyler.js'

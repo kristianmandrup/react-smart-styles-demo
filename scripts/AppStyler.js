@@ -1,10 +1,9 @@
-import StyleBuilder from './StyleBuilder.js'
+import { StyleBuilder } from 'style-builder';
 import { mixin } from 'core-decorators';
 
 
 const TodoMixin = {
   heading(state) {
-    // console.log('heading', state);
     return {
       color: state.on ? 'blue' : 'gray',
     }
