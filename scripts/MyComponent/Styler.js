@@ -14,8 +14,8 @@ const TodoMixin = {
   }
 };
 
-@mixin(TodoMixin)
-class Styles {
-}
+// @mixin(TodoMixin)
+// class Styles {
+// }
 
-export default StyleBuilder.create(Styles, 'MyComponent');
+export default StyleBuilder.create(TodoMixin, {name: 'MyComponent'});

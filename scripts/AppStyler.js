@@ -15,4 +15,4 @@ const TodoMixin = {
 class Styles {
 }
 
-export default StyleBuilder.create(Styles, 'App');
+export default StyleBuilder.create(new Styles(), {name: 'App'});

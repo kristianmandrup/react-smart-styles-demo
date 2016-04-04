@@ -1,5 +1,6 @@
 import Styler from './Styler.js'
-import { injectProps, statefulStyling, updateStyles } from '../decorators.js'
+import { statefulStyling, updateStyles } from '../decorators.js'
+import { injectProps } from 'relpers'
 
 import React, {
   Component
@@ -26,6 +27,7 @@ export default class MyComponent extends Component {
 
   @updateStyles
   componentWillMount() {
+    console.log('will mount');
   }
 
   // FIX: instead we need an after setState hook
@@ -33,6 +35,7 @@ export default class MyComponent extends Component {
   // we re-compute styles based on state
   @updateStyles
   componentWillUpdate() {
+    console.log('will update');
   }
 
   shouldComponentUpdate(nextProps, nextState) {

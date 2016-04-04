@@ -2,16 +2,19 @@ import { getArgs } from './util';
 import shortid from 'shortid';
 
 export default class StyleBuilder {
-  constructor(styles, name) {
+  constructor(styles, opts = {}) {
     this.styles = styles;
-    this.name = name;
+    this.name = opts.name;
+    this.logger = opts.logger || console;
+    this.logOn = opts.log
   }
 
-  init(props, state, styles) {
+  init(props, state, opts = {}) {
     this.props = props
     this.state = state
-    if (styles)
-      this.styles = styles
+    if (opts.styles) {
+      this.styles = opts.styles
+    }
     this.styleResult = this.staticStyles(); // initially only static
     this.dependencyMap = new Map()
     this.typeMap = {
@@ -22,6 +25,12 @@ export default class StyleBuilder {
     this.registerStyles();
     return this;
     // this.createGeneric()
+  }
+
+  log(msg) {
+    if (this.logOn) {
+      this.logger.log(this.name, '::', msg);
+    }
   }
 
   createGeneric() {
@@ -41,9 +50,7 @@ export default class StyleBuilder {
     styles = styles || this.styles
     // iterate all functions of styles Object
     for (let style in styles) {
-      // console.log('style', style);
       var args = getArgs(styles[style]);
-      // console.log('args', args);
       this.registerDependencies(style, args)
     }
   }
@@ -59,27 +66,24 @@ export default class StyleBuilder {
     }
 
     for (let prop of propertyNames) {
-      // console.log('typeMap', this.typeMap, prop, name);
       this.typeMap[prop].add(name) // list
     }
   }
 
   browser(props, state) {
-    // console.log('COMPONENT', this.name)
-    // console.log('call browser: State', state, 'Props', props, this);
+    this.log('browser', state, props);
     state = state || this.state;
     props = props || this.props;
     return this.compute(state, props)
   }
 
-  // native(state, props) {
-  //   return StyleSheet.create(this.compute())
-  // }
+  native(state, props) {
+    return StyleSheet.create(this.browser())
+  }
 
   compute(state, props) {
-    // console.log('compute', state, props);
     if (!this.stateDiff(state) && !this.propsDiff(props)) {
-      // console.log('abort compute', this.stateDiff(state), this.propsDiff(props));
+      this.log('abort compute');
       return null;
     }
 
@@ -98,11 +102,10 @@ export default class StyleBuilder {
   }
 
   stateDiff(state) {
-    // console.log('stateDiff', this.state, state);
-
+    this.log('stateDiff', this.state, state);
     if (this.state && this.state.stylesKey) {
       if (this.state.stylesKey === state.stylesKey) {
-        // console.log('matching stylesKey', this.state.stylesKey, state.stylesKey);
+        this.log('matching stylesKey', this.state.stylesKey, state.stylesKey);
         return false;
       }
     }
@@ -125,18 +128,16 @@ export default class StyleBuilder {
   }
 
   computeStyles(state, props) {
-    // console.log('computeStyles', state, props);
+    this.log('computeStyles', state, props);
 
-    // console.log(this.stateDiff(state), this.propsDiff(props));
     // ignore static styles
     // ie. styleObj.static
 
     // https://esdiscuss.org/topic/es6-iteration-over-object-values
     // https://www.pandastrike.com/posts/20150717-iterators
 
-
     if (this.anyDiff(state, props)) {
-      // console.log('compute on anyDiff');
+      this.log('compute on anyDiff');
       for (let key of this.typeMap.any) {
         let styleFun = this.styles[key]
         // check state/props dependency and only call if either one changed
@@ -149,7 +150,7 @@ export default class StyleBuilder {
     // for this to work, each entry should be a Map, not just an Object!
     // should compare pointer of prev state (assume immutable)
     if (this.stateDiff(state)) {
-      // console.log('compute on stateDiff', this.styles);
+      this.log('compute on stateDiff', this.styles);
       for (let key of this.typeMap.state) {
         let styleFun = this.styles[key]
         let style = styleFun(state);
@@ -160,7 +161,7 @@ export default class StyleBuilder {
     }
 
     if (this.propsDiff(props)) {
-      // console.log('compute on propsDiff');
+      this.log('compute on propsDiff');
       // should compare pointer of prev props (assume immutable)
       for (let key of this.typeMap.props) {
         let styleFun = this.styles[key]
@@ -168,13 +169,12 @@ export default class StyleBuilder {
         this.styleResult[key] = styleFun(props)
       }
     }
-    // console.log('styleResult', this.styleResult);
+    this.log('styleResult', this.styleResult);
     return this.styleResult
   }
 }
 
-StyleBuilder.create = function(Styles, name) {
-  let styles = new Styles();
+StyleBuilder.create = function(styles, name) {
   let styleBuilder = new StyleBuilder(styles, name);
   return styleBuilder;
 }
