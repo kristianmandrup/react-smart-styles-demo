@@ -1,6 +1,6 @@
 // import {headers} from '../../styles/Global.styles.js'
 // TODO: extract to npm module
-import { StyleBuilder } from 'style-builder';
+import { StyleBuilder } from 'reactive-style-builder';
 import { mixin } from 'core-decorators';
 
 
@@ -17,7 +17,5 @@ const TodoMixin = {
 // @mixin(TodoMixin)
 // class Styles {
 // }
-
-console.log('StyleBuilder ', StyleBuilder);
 
 export default StyleBuilder.create(TodoMixin, {name: 'MyComponent'});

@@ -1,4 +1,4 @@
-import { StyleBuilder } from 'style-builder';
+import { StyleBuilder } from 'reactive-style-builder';
 import { mixin } from 'core-decorators';
 
 
