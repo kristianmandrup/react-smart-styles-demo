@@ -31,17 +31,17 @@ export default class MyComponent extends Component {
   // FIX: instead we need an after setState hook
   // What about if props change?
   updateState(state) {
+    console.log('!!!updateState', state);
+    this.state.stylesKey = '';
     this.setState(state);
-    this.updateStyles(state);
-    // this.setState({styles: {title: { color: 'red'}}});
   }
 
   // FIX: instead we need an after setState hook
   // just before component is rendered after a state update,
   // we re-compute styles based on state
-  // @updateStyles
-  // componentWillUpdate() {
-  // }
+  @updateStyles
+  componentWillUpdate() {
+  }
 
   shouldComponentUpdate(nextProps, nextState) {
     if (this.props === nextProps && this.state === nextState) {
@@ -50,9 +50,14 @@ export default class MyComponent extends Component {
     return true;
   }
 
-  _clicked() {
-    console.log('clicked');
+  _complete() {
+    console.log('Complete task');
     this.updateState({todo: {completed: true}});
+  }
+
+  _start() {
+    console.log('Start task');
+    this.updateState({todo: {completed: false}});
   }
 
   // https://github.com/goncalvesjoao/relpers
@@ -62,7 +67,8 @@ export default class MyComponent extends Component {
     return (
       <div style={styles.header}>
         <div style={styles.title}>Blip</div>
-        <button onClick={this._clicked.bind(this)} >Click me</button>
+        <button onClick={this._complete.bind(this)} >Complete</button>
+        <button onClick={this._start.bind(this)} >Start</button>
       </div>
     )
   }

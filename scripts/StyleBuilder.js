@@ -1,4 +1,5 @@
 import { getArgs } from './util';
+import shortid from 'shortid';
 
 export default class StyleBuilder {
   constructor(props, state, styles) {
@@ -57,8 +58,8 @@ export default class StyleBuilder {
     }
   }
 
-  browser(state, props) {
-    console.log('call browser', state, props, this);
+  browser(props, state) {
+    console.log('call browser: State', state, 'Props', props, this);
     state = state || this.state;
     props = props || this.props;
     console.log('browser', state, props);
@@ -71,23 +72,41 @@ export default class StyleBuilder {
 
   compute(state, props) {
     console.log('compute', state, props);
+    if (!this.stateDiff(state) && !this.propsDiff(props)) {
+      console.log('abort compute', this.stateDiff(state), this.propsDiff(props));
+      return null;
+    }
+
     let result = this.computeStyles(state, props)
 
     if (this.stateDiff(state)) {
       this.state = state
+      // hack to avoid infinite recursion
+      this.state.stylesKey = shortid.generate();
     }
 
     if (this.propsDiff(props)) {
-      this.props = props
+      this.props = props;
     }
     return result
   }
 
   stateDiff(state) {
+    console.log('stateDiff', this.state, state);
+
+    if (this.state && this.state.stylesKey) {
+      if (this.state.stylesKey === state.stylesKey) {
+        console.log('matching stylesKey', this.state.stylesKey, state.stylesKey);
+        return false;
+      }
+    }
+
     return this.state !== state
   }
 
   propsDiff(props) {
+    console.log('propsDiff', this.props, props);
+    // hack to avoid infinite recursion
     return this.props !== props
   }
 
@@ -95,8 +114,13 @@ export default class StyleBuilder {
     return this.stateDiff(state) && this.propsDiff(props)
   }
 
+  anyDiff(state, props) {
+    return this.stateDiff(state) || this.propsDiff(props)
+  }
+
   computeStyles(state, props) {
     console.log('computeStyles', state, props);
+
     console.log(this.stateDiff(state), this.propsDiff(props));
     // ignore static styles
     // ie. styleObj.static
@@ -104,12 +128,15 @@ export default class StyleBuilder {
     // https://esdiscuss.org/topic/es6-iteration-over-object-values
     // https://www.pandastrike.com/posts/20150717-iterators
 
-    if (this.bothDiff(state, props)) {
-      console.log('compute on bothDiff');
+
+    if (this.anyDiff(state, props)) {
+      console.log('compute on anyDiff');
       for (let key of this.typeMap.any) {
         let styleFun = this.styles[key]
         // check state/props dependency and only call if either one changed
-        this.styleResult[key] = styleFun({state: state, props: props})
+        // res = styleFun({state: state, props: props})
+        let res = styleFun(state, props);
+        this.styleResult[key] = res
       }
     }
 
