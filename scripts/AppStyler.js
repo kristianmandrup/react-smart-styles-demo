@@ -4,7 +4,7 @@ import { mixin } from 'core-decorators';
 
 const TodoMixin = {
   heading(state) {
-    console.log('heading', state);
+    // console.log('heading', state);
     return {
       color: state.on ? 'blue' : 'gray',
     }
@@ -15,4 +15,4 @@ const TodoMixin = {
 class Styles {
 }
 
-export default StyleBuilder.create(Styles);
+export default StyleBuilder.create(Styles, 'App');

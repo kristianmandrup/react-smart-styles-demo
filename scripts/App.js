@@ -17,12 +17,12 @@ export default class App extends Component {
   }
 
   _clicked() {
-    console.log('container clicked');
+    // console.log('container clicked');
     this.updateState({wasClicked: true, count: this.count++ });
   }
 
   _on() {
-    console.log('container ON');
+    // console.log('container ON');
     this.updateState({on: true});
   }
 
@@ -41,7 +41,7 @@ export default class App extends Component {
 
   @injectProps('state', 'props')
   render({ styles = {} }) {
-    console.log('render App styles', styles);
+    // console.log('render App styles', styles);
     return (
       // Add your component markup and other subcomponent references here.
       <div>

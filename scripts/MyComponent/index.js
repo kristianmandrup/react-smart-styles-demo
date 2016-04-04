@@ -31,7 +31,7 @@ export default class MyComponent extends Component {
   // FIX: instead we need an after setState hook
   // What about if props change?
   updateState(state) {
-    console.log('!!!updateState', state);
+    // console.log('!!!updateState', state);
     this.state.stylesKey = '';
     this.setState(state);
   }
@@ -51,19 +51,19 @@ export default class MyComponent extends Component {
   }
 
   _complete() {
-    console.log('Complete task');
+    // console.log('Complete task');
     this.updateState({todo: {completed: true}});
   }
 
   _start() {
-    console.log('Start task');
+    // console.log('Start task');
     this.updateState({todo: {completed: false}});
   }
 
   // https://github.com/goncalvesjoao/relpers
   @injectProps('state', 'props')
   render({ styles = {} }) {
-    console.log('render styles', styles);
+    // console.log('render styles', styles);
     return (
       <div style={styles.header}>
         <div style={styles.title}>Blip</div>

@@ -66,17 +66,17 @@ export function updateStyles(target, name, descriptor) {
 }
 
 // @statefulStyles('native')
-export function statefulStyling(type, clazz) {
+export function statefulStyling(type, styleBuilder) {
   return function(target) {
     // console.log('statefulStyling', target)
     // add function updateStyles to target (class ie. prototype)
     target.prototype.updateStyles = function(nextProps, nextState) {
-      console.log('updateStyles', nextProps, nextState, type);
+      // console.log('updateStyles', nextProps, nextState, type);
       if (nextProps || nextState) {
         var styles = this.styler[type](nextProps, nextState);
         // if styles changed, update
         if (styles && Object.keys(styles).length) {
-          console.log('set styles', styles);
+          // console.log('set styles', styles);
           this.setState({styles: styles});
         }
       }
@@ -84,7 +84,7 @@ export function statefulStyling(type, clazz) {
 
     target.prototype.initStyles = function(nextProps, nextState) {
       // console.log('initStyles', nextProps || this.props, nextState || this.state);
-      this.styler = new clazz(nextProps, nextState);
+      this.styler = styleBuilder.init(nextProps, nextState);
       this.updateStyles(nextProps, nextState);
     }
 
