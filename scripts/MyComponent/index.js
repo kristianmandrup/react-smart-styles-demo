@@ -29,14 +29,6 @@ export default class MyComponent extends Component {
   }
 
   // FIX: instead we need an after setState hook
-  // What about if props change?
-  updateState(state) {
-    // console.log('!!!updateState', state);
-    this.state.stylesKey = '';
-    this.setState(state);
-  }
-
-  // FIX: instead we need an after setState hook
   // just before component is rendered after a state update,
   // we re-compute styles based on state
   @updateStyles

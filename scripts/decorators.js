@@ -80,6 +80,12 @@ export function statefulStyling(type, styleBuilder) {
           this.setState({styles: styles});
         }
       }
+
+      target.prototype.updateState = function(state) {
+        // console.log('!!!updateState', state);
+        this.state.stylesKey = '';
+        this.setState(state);
+      }
     }
 
     target.prototype.initStyles = function(nextProps, nextState) {

@@ -26,11 +26,6 @@ export default class App extends Component {
     this.updateState({on: true});
   }
 
-  updateState(state) {
-    this.state.stylesKey = '';
-    this.setState(state);
-  }
-
   @updateStyles
   componentWillMount() {
   }
