@@ -1,5 +1,7 @@
 # React ES6 Webpack Boilerplate
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/kristianmandrup/react-smart-styles-demo.svg)](https://greenkeeper.io/)
+
 Boilerplate for kick starting a project with the following technologies:
 * [React](https://github.com/facebook/react)
 * [Babel 6](http://babeljs.io)
